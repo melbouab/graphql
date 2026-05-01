@@ -1,28 +1,30 @@
+import { formatXpValue } from "../utils/utils.js";
 
 export default class ProjectsRatio {
   static render(totalUp, totalDown) {
     const total = totalUp + totalDown;
-    if (total === 0) return `
+    if (total === 0)
+      return `
       <div class="graph-card">
         <h2>Audit Ratio</h2>
         <p style="color:var(--text-muted);text-align:center;padding:3rem 0">No audit data.</p>
       </div>`;
 
-    const ratio      = totalDown > 0 ? (totalUp / totalDown).toFixed(2) : "∞";
-    const upPct      = Math.round((totalUp  / total) * 100);
-    const downPct    = 100 - upPct;
-    const upKB       = (totalUp  / 1000).toFixed(1);
-    const downKB     = (totalDown / 1000).toFixed(1);
+    const ratio = totalDown > 0 ? (totalUp / totalDown).toFixed(2) : "∞";
+    const upPct = Math.round((totalUp / total) * 100);
+    const downPct = 100 - upPct;
+    const upFormatted = formatXpValue(totalUp);
+    const downFormatted = formatXpValue(totalDown);
 
-    const R   = 110;  // radius
-    const CX  = 160;  // centre x
-    const CY  = 160;  // centre y
-    const SW  = 28;   // stroke-width
-    const C   = 2 * Math.PI * R;
+    const R = 110; // radius
+    const CX = 160; // centre x
+    const CY = 160; // centre y
+    const SW = 28; // stroke-width
+    const C = 2 * Math.PI * R;
     const upArc = (totalUp / total) * C;
 
-    const R2  = 70;
-    const C2  = 2 * Math.PI * R2;
+    const R2 = 70;
+    const C2 = 2 * Math.PI * R2;
     const clampedRatio = Math.min(parseFloat(ratio) || 0, 3); // cap at 3x for display
     const ratioArc = (clampedRatio / 3) * C2;
 
@@ -95,7 +97,7 @@ export default class ProjectsRatio {
               <div class="audit-stat-dot" style="background:var(--success)"></div>
               <div>
                 <div class="audit-stat-label">Audits Done</div>
-                <div class="audit-stat-value">${upKB} <span>kB</span></div>
+                <div class="audit-stat-value">${upFormatted}</div>
               </div>
               <div class="audit-stat-pct" style="color:var(--success)">${upPct}%</div>
             </div>
@@ -111,7 +113,7 @@ export default class ProjectsRatio {
               <div class="audit-stat-dot" style="background:var(--danger)"></div>
               <div>
                 <div class="audit-stat-label">Audits Received</div>
-                <div class="audit-stat-value">${downKB} <span>kB</span></div>
+                <div class="audit-stat-value">${downFormatted}</div>
               </div>
               <div class="audit-stat-pct" style="color:var(--danger)">${downPct}%</div>
             </div>
@@ -124,16 +126,19 @@ export default class ProjectsRatio {
             </div>
 
             <div class="audit-ratio-badge">
-              <span>${parseFloat(ratio) >= 1 ? '✅' : '⚠️'}</span>
-              <span>${parseFloat(ratio) >= 1
-                ? 'Good standing — keep it up!'
-                : 'Do more audits to improve your ratio'}</span>
+              <span>${parseFloat(ratio) >= 1 ? "✅" : "⚠️"}</span>
+              <span>${
+                parseFloat(ratio) >= 1
+                  ? "Good standing — keep it up!"
+                  : "Do more audits to improve your ratio"
+              }</span>
             </div>
           </div>
         </div>
       </div>
 
       <style>
+        /* CSS styles stay exactly the same */
         .audit-ratio-layout {
           display: flex;
           align-items: center;
